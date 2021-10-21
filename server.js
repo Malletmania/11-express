@@ -1,7 +1,13 @@
 const express = require('express');
 const path = require('path');
-const { clog } = require('./middleware/clog');
-const api = require('./routes/index.js');
+const fs = require('fs');
+const { v4: uuidv4 } = require('uuid');
+
+const dbPath = path.join(__dirname, '/db/db.json');
+
+let getDB = () => JSON.parse(fs.readFileSync(dbPath));
+
+let saveDB = (json) => fs.writeFile(dbPath, json, err => { err ? console.error(err) : console.log('Database Saved!'); });
 
 const PORT = process.env.port || 3001;
 
@@ -15,6 +21,7 @@ app.get('*', (req, res) =>
   res.sendFile(path.join(__dirname, '/public/index.html'))
 );
 
+// works and fills the /nots requirement
 app.get('/notes', (req, res) =>
   res.sendFile(path.join(__dirname, '/public/notes.html'))
 );
